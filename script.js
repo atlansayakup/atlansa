@@ -5,7 +5,32 @@ var mainPageContent = document.getElementById('mainPageContent');
 var started = false;
 var isMobile = ('ontouchstart' in window) || (window.matchMedia('(max-width: 768px)').matches);
 
+const bgMusic = new Audio('assets/backgroundMusic.mp3');
+bgMusic.loop = true;
+bgMusic.volume = 0.2;
+
 document.addEventListener('DOMContentLoaded', () => {
+    bgMusic.play().catch(e => console.log("Autoplay prevented by browser. Will play on interaction."));
+
+    const toggleMusicBtn = document.getElementById('toggleMusicBtn');
+
+    if (toggleMusicBtn) {
+        bgMusic.addEventListener('play', () => {
+            toggleMusicBtn.innerText = "⏸";
+        });
+        bgMusic.addEventListener('pause', () => {
+            toggleMusicBtn.innerText = "▶";
+        });
+
+        toggleMusicBtn.addEventListener('click', () => {
+            if (bgMusic.paused) {
+                bgMusic.play().catch(e => console.error(e));
+            } else {
+                bgMusic.pause();
+            }
+        });
+    }
+
     const clickToBeginText = document.querySelector('.mainPageClickToBegin');
 
     // Show appropriate prompt
@@ -28,12 +53,18 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
-// Mobile: tap anywhere on the intro screen
-document.addEventListener('touchstart', (event) => {
-    if (!started) {
-        start();
-    }
-}, { passive: true });
+// Mobile & Desktop: tap anywhere on the intro screen
+['click', 'touchend'].forEach(evt => {
+    document.addEventListener(evt, (event) => {
+        if (!started) {
+            // Browsers often require audio.play() to be called directly within the user-event handler
+            bgMusic.play().catch(e => console.error("Audio playback failed on interaction:", e));
+            bgMusic.volume = 1;
+
+            start();
+        }
+    }, { passive: false });
+});
 
 
 // Mouse trail — desktop only
@@ -63,8 +94,14 @@ function start() {
     if (started) return;
     started = true;
 
+    bgMusic.play().catch(e => console.error("Audio playback failed:", e));
+    bgMusic.volume = 1;
+
     document.body.style.backgroundColor = "var(--bg-dark)";
     document.body.classList.add('dark-mode');
+    document.body.classList.add('scroll-enabled');
+    window.scrollTo({ top: 0, behavior: 'instant' });
+
     mainPageWelcomeText.style.filter = "blur(100px)";
     mainPageWelcomeText.style.top = "-30%";
     mainPageClickToBegin.style.top = "-30%";

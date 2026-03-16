@@ -30,7 +30,8 @@ body {
     font-family: 'Space Mono', monospace;
     font-size: 14px;
     transition: background-color 0.6s ease;
-    overflow: hidden; /* desktop: no scroll */
+    overflow: hidden;
+    /* desktop: no scroll */
 }
 
 /* ─── FONTS ─────────────────────────────────────────────────── */
@@ -315,6 +316,59 @@ body.dark-mode .skill-item:hover {
     color: #0d0d0d;
 }
 
+/* ─── MUSIC BOX  (cols 9→13, rows 1→3) ─── */
+.dynamicBox.music {
+    grid-column: 9 / 13;
+    grid-row: 1 / 2;
+}
+
+.dynamicBox.music .music-content {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    padding: 0;
+    gap: 0;
+}
+
+.dynamicBox.music .track-info {
+    flex: 1;
+    text-align: left;
+    font-size: 11px;
+    word-break: break-all;
+    animation: blink 3s infinite ease-in-out;
+    display: flex;
+    align-items: center;
+    padding: 14px;
+}
+
+.dynamicBox.music button {
+    background: var(--ink);
+    color: var(--bg);
+    border: none;
+    border-left: 3px solid var(--ink);
+    font-family: 'Space Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 0;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: filter 0.2s;
+    width: 20%;
+    flex-shrink: 0;
+}
+
+.dynamicBox.music button:hover {
+    filter: brightness(1.2);
+}
+
+body.dark-mode .dynamicBox.music button {
+    background: var(--bg);
+    color: #0d0d0d;
+    border-left: 3px solid var(--bg);
+}
+
 /* ─── DARK MODE for boxes after reveal ─────────────────────── */
 body.dark-mode .dynamicBox {
     background-color: #1a1a1a;
@@ -343,12 +397,11 @@ body.dark-mode .dynamicBox.contact ul li:hover {
 /* ─── RESPONSIVE ─────────────────────────────────── */
 @media (max-width: 768px) {
 
-    /* Allow vertical scrolling on mobile */
-    body {
+    /* Allow vertical scrolling on mobile only after start */
+    body.scroll-enabled {
         overflow-y: auto;
         overflow-x: hidden;
     }
-
     /* Shrink welcome text */
     .mainPageWelcomeText {
         font-size: 28px;
@@ -388,7 +441,8 @@ body.dark-mode .dynamicBox.contact ul li:hover {
 
     .dynamicBox.contact,
     .dynamicBox.aboutMe,
-    .dynamicBox.location {
+    .dynamicBox.location,
+    .dynamicBox.music {
         grid-column: unset;
         grid-row: unset;
     }
